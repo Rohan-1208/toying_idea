@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: toying-backend
+    env: python
+    rootDir: apps/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: toying_idea
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+  - type: web
+    name: toying-storefront
+    env: node
+    rootDir: apps/storefront
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    autoDeploy: true
+    envVars:
+      - key: BACKEND_URL
+        sync: false
+
