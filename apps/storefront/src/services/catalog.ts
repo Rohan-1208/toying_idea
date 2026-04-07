@@ -35,8 +35,12 @@ export async function searchProducts(params: {
     await apiUrl(`/api/products${qs ? `?${qs}` : ""}`),
     { cache: "no-store" },
   );
-  if (!res.ok) throw new Error("Failed to load products");
-  return (await res.json()) as { items: Product[]; facets: { categories: string[] } };
+  if (!res.ok) return { items: [], facets: { categories: [] } };
+  try {
+    return (await res.json()) as { items: Product[]; facets: { categories: string[] } };
+  } catch {
+    return { items: [], facets: { categories: [] } };
+  }
 }
 
 export async function getProduct(slug: string): Promise<{ product: Product; related: Product[] }> {

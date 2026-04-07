@@ -7,10 +7,16 @@ import { ProductTile } from "@/components/ProductTile";
 import { getFeaturedCollections, searchProducts } from "@/services/catalog";
 
 export default async function Home() {
-  const [collections, productSearch] = await Promise.all([
+  const [collectionsRes, productSearchRes] = await Promise.allSettled([
     getFeaturedCollections(),
     searchProducts({ sort: "featured" }),
   ]);
+
+  const collections = collectionsRes.status === "fulfilled" ? collectionsRes.value : [];
+  const productSearch =
+    productSearchRes.status === "fulfilled"
+      ? productSearchRes.value
+      : { items: [], facets: { categories: [] } };
 
   const featured = productSearch.items.slice(0, 4);
 

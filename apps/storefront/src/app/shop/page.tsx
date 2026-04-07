@@ -15,7 +15,10 @@ export default async function Shop({
       ? sp.sort
       : "featured";
 
-  const initial = await searchProducts({ q, category, sort });
+  const initial = await searchProducts({ q, category, sort }).catch(() => ({
+    items: [],
+    facets: { categories: [] },
+  }));
 
   return (
     <AppShell>
@@ -32,4 +35,3 @@ export default async function Shop({
     </AppShell>
   );
 }
-

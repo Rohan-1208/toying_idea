@@ -22,21 +22,20 @@ const statuses = ["all", "Placed", "In production", "Quality check", "Shipped", 
 export function OrdersClient() {
   const params = useSearchParams();
   const [pending, startTransition] = useTransition();
-  const [orderNumbers, setOrderNumbers] = useState<string[]>([]);
+  const [orderNumbers, setOrderNumbers] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = window.localStorage.getItem("ti_orders");
+      const list = raw ? (JSON.parse(raw) as string[]) : [];
+      return list.filter(Boolean);
+    } catch {
+      return [];
+    }
+  });
   const [data, setData] = useState<Record<string, OrderSummary | null>>({});
   const [add, setAdd] = useState("");
 
   const [statusFilter, setStatusFilter] = useState(() => params.get("status") || "all");
-
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem("ti_orders");
-      const list = raw ? (JSON.parse(raw) as string[]) : [];
-      setOrderNumbers(list.filter(Boolean));
-    } catch {
-      setOrderNumbers([]);
-    }
-  }, []);
 
   useEffect(() => {
     if (orderNumbers.length === 0) return;
