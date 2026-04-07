@@ -48,13 +48,12 @@ class ProductUpsert(BaseModel):
 
 @router.get("/products")
 async def list_products(q: str | None = None, category: str | None = None, sort: str = "featured"):
-    docs: list[dict] = []
     try:
         db = await get_db()
         cursor = db["products"].find({"active": True})
         docs = await cursor.to_list(length=200)
-    except Exception:
-        docs = []
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database unavailable") from e
 
     products = normalize_ids(docs)
 
@@ -85,7 +84,7 @@ async def list_products(q: str | None = None, category: str | None = None, sort:
     else:
         products.sort(key=lambda p: int(p.get("featuredRank") or 999))
 
-    all_categories = sorted({c for p in normalize_ids(docs) for c in (p.get("categories") or [])})
+    all_categories = sorted({c for p in products for c in (p.get("categories") or [])})
 
     return {"items": products, "facets": {"categories": all_categories}}
 
