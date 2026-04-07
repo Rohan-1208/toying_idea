@@ -28,7 +28,7 @@ export type AdminOrder = {
     name?: string;
     variantLabel?: string;
     quantity?: number;
-    unitPrice?: { currency: "USD" | "INR" | "EUR"; amount: number };
+    unitPrice?: { currency: "INR" | "EUR"; amount: number };
   }>;
 };
 

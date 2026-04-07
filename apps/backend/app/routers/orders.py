@@ -44,7 +44,7 @@ async def create_order(payload: OrderCreate, user=Depends(get_current_user)):
             variant = next((v for v in (product.get("variants") or []) if v.get("id") == item.variantId), None)
         if not product or not variant:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid product/variant")
-        unit_price = variant.get("price") or {"currency": "USD", "amount": 0}
+        unit_price = variant.get("price") or {"currency": "INR", "amount": 0}
         items.append(
             {
                 "productSlug": item.productSlug,
