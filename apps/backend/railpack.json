@@ -9,11 +9,11 @@
       "commands": [
         "python -m ensurepip --upgrade",
         "python -m pip install --upgrade pip setuptools wheel",
-        "sh -c 'for f in requirements.txt ../requirements.txt ../../requirements.txt apps/backend/requirements.txt; do if [ -f \"$f\" ]; then python -m pip install -r \"$f\"; exit $?; fi; done; echo \"requirements.txt not found\"; exit 1'"
+        "python -m pip install -r requirements.txt"
       ]
     }
   },
   "deploy": {
-    "startCommand": "cd apps/backend 2>/dev/null || cd .. 2>/dev/null || true; uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    "startCommand": "if [ -f app/main.py ]; then :; elif [ -f apps/backend/app/main.py ]; then cd apps/backend; fi; uvicorn app.main:app --host 0.0.0.0 --port $PORT"
   }
 }
