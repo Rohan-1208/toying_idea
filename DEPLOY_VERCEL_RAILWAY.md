@@ -41,6 +41,7 @@ After deploy, Railway gives a public URL:
 1. Vercel → Add New → **Project**
 2. Import `Rohan-1208/toying_idea`
 3. Set **Root Directory** to `apps/storefront`
+4. Ensure **Framework Preset** is detected as Next.js (not "Other")
 
 ### 2) Environment variables
 
@@ -61,4 +62,3 @@ After deploy:
 
 - Ensure Network Access allows Railway outbound traffic (for early testing, `0.0.0.0/0`).
 - Ensure the DB user has read/write permissions.
-
