@@ -1,0 +1,4 @@
+{
+  "builds": [{ "src": "apps/storefront/package.json", "use": "@vercel/next" }]
+}
+
