@@ -99,8 +99,10 @@ async def get_product_by_slug(slug: str):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
         cursor = db["products"].find({"active": True, "slug": {"$ne": slug}})
         others = normalize_ids(await cursor.to_list(length=200))
-    except Exception:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database unavailable") from e
     related = [p for p in others if any(c in (doc.get("categories") or []) for c in (p.get("categories") or []))][:4]
     if len(related) < 4:
         seen = {p.get("slug") for p in related}
@@ -124,8 +126,10 @@ async def get_product(slug: str):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
         cursor = db["products"].find({"active": True, "slug": {"$ne": slug}})
         others = normalize_ids(await cursor.to_list(length=200))
-    except Exception:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Database unavailable") from e
     related = [p for p in others if any(c in (doc.get("categories") or []) for c in (p.get("categories") or []))][:4]
     if len(related) < 4:
         seen = {p.get("slug") for p in related}

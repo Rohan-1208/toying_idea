@@ -67,3 +67,10 @@ async def on_startup():
 @app.get("/health")
 async def health():
     return {"ok": True}
+
+
+@app.get("/health/db")
+async def health_db():
+    db = await get_db()
+    await db.command("ping")
+    return {"ok": True, "db": True, "db_name": settings.db_name}
