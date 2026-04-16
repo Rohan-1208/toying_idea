@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
@@ -7,6 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { ProductTile } from "@/components/ProductTile";
 import { getProduct } from "@/services/catalog";
 import { AddToCartPanel } from "@/app/product/[slug]/purchasePanel";
+import { ProductGalleryClient } from "@/app/product/[slug]/ProductGalleryClient";
 
 export default async function ProductPage({
   params,
@@ -41,31 +41,7 @@ export default async function ProductPage({
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2 items-start">
-          <Card className="overflow-hidden">
-            <div className="relative aspect-[4/3] bg-ti-cream">
-              <Image
-                src={product.images[0]?.url ?? "/images/nova-bear-1.svg"}
-                alt={product.images[0]?.alt ?? product.name}
-                fill
-                unoptimized
-                className="object-cover p-8"
-                priority
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-3 p-4 bg-ti-cream/40 border-t border-border">
-              {product.images.slice(0, 3).map((img) => (
-                <div key={img.id} className="relative aspect-[4/3] rounded-[var(--radius-md)] border border-border bg-surface overflow-hidden">
-                  <Image
-                    src={img.url}
-                    alt={img.alt}
-                    fill
-                    unoptimized
-                    className="object-cover p-4"
-                  />
-                </div>
-              ))}
-            </div>
-          </Card>
+          <ProductGalleryClient name={product.name} images={product.images} />
 
           <div className="grid gap-5">
             <div className="flex flex-wrap items-center gap-2">
