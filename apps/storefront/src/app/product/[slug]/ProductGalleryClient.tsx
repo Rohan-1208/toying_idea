@@ -24,7 +24,7 @@ export function ProductGalleryClient({ name, images }: { name: string; images: P
           alt={active.alt || name}
           fill
           unoptimized
-          className="object-cover p-8"
+          className="object-contain p-8"
           priority
         />
       </div>
@@ -49,7 +49,7 @@ export function ProductGalleryClient({ name, images }: { name: string; images: P
                   alt={img.alt || name}
                   fill
                   unoptimized
-                  className="object-cover"
+                  className="object-contain"
                 />
               </button>
             );
@@ -59,4 +59,3 @@ export function ProductGalleryClient({ name, images }: { name: string; images: P
     </Card>
   );
 }
-
