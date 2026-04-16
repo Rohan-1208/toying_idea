@@ -151,6 +151,16 @@ async def admin_list_products(admin=Depends(require_admin)):
     return normalize_ids(docs)
 
 
+@router.get("/admin/products/{product_id}")
+async def admin_get_product(product_id: str, admin=Depends(require_admin)):
+    db = await get_db()
+    doc = await db["products"].find_one({"_id": object_id(product_id)})
+    doc = normalize_id(doc)
+    if doc is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+    return doc
+
+
 @router.post("/admin/products", status_code=status.HTTP_201_CREATED)
 async def admin_create_product(payload: ProductUpsert, admin=Depends(require_admin)):
     db = await get_db()

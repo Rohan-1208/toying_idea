@@ -23,36 +23,45 @@ export function AdminProductsClient({ initial }: { initial: AdminProductRow[] })
             <div className="font-medium">{p.name}</div>
             <div className="text-xs text-muted">{p.slug}</div>
           </div>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={pending}
-            onClick={() => {
-              const ok = window.confirm(`Delete "${p.name}"?`);
-              if (!ok) return;
-              startTransition(async () => {
-                const res = await fetch(`/api/admin/products/${encodeURIComponent(p.id)}`, {
-                  method: "DELETE",
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={pending}
+              onClick={() => router.push(`/admin/products/${encodeURIComponent(p.id)}/edit`)}
+            >
+              Edit
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={pending}
+              onClick={() => {
+                const ok = window.confirm(`Delete "${p.name}"?`);
+                if (!ok) return;
+                startTransition(async () => {
+                  const res = await fetch(`/api/admin/products/${encodeURIComponent(p.id)}`, {
+                    method: "DELETE",
+                  });
+                  if (res.status === 401 || res.status === 403) {
+                    window.location.href = "/admin";
+                    return;
+                  }
+                  if (!res.ok) {
+                    const text = await res.text().catch(() => "");
+                    alert(text || "Failed to delete product");
+                    return;
+                  }
+                  setProducts((prev) => prev.filter((x) => x.id !== p.id));
+                  router.refresh();
                 });
-                if (res.status === 401 || res.status === 403) {
-                  window.location.href = "/admin";
-                  return;
-                }
-                if (!res.ok) {
-                  const text = await res.text().catch(() => "");
-                  alert(text || "Failed to delete product");
-                  return;
-                }
-                setProducts((prev) => prev.filter((x) => x.id !== p.id));
-                router.refresh();
-              });
-            }}
-          >
-            Delete
-          </Button>
+              }}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       ))}
     </div>
   );
 }
-
